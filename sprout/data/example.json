@@ -1,0 +1,9 @@
+{ 
+    "variables" : {
+        "$MY_VERSION" : "1.0.5"
+    },
+
+    "artifacts" : [ 
+        "http://nexus.mycompany.com/content/groups/public/com/mycompany/myproject/web-service/$MY_VERSION/service-$VERSION-installer.jar"
+        ]
+}
