@@ -1,13 +1,36 @@
 from sprout import * 
+import urlparse 
 import unittest
 
 class NexusTest(unittest.TestCase):
 
     def test_artifact_url(self):
-        """ build artifact url from configuration. """
-        cfg = config.Config() 
-        cfg.settings['nexus_hostname'] = 'nexus'
-        result = nexus.artifact_url(cfg)
-        self.assertEquals(
-            "http://nexus/service/local/artifact/maven/redirect?todo=todo",
-            result)
+        """ build artifact url. """
+        artifact = nexus.Artifact('group_id', 'artifact_id', 'version', 'classifier', 'repo')
+        result = nexus.artifact_url('nexus', artifact)
+        params = urlparse.parse_qs(result.split('?')[1])
+
+        self.assertEquals('group_id', "".join(params['g']))
+        self.assertEquals('artifact_id', "".join(params['a']))
+        self.assertEquals('version', "".join(params['v']))
+        self.assertEquals('classifier', "".join(params['c']))
+        self.assertEquals('repo', "".join(params['r']))
+
+    def test_artifact_url_no_classifier(self):
+        """ build artifact url without a classifier """
+        artifact = nexus.Artifact('group_id', 'artifact_id', 'version', classifier=None, repository='repo')
+        result = nexus.artifact_url('nexus', artifact)
+        params = urlparse.parse_qs(result.split('?')[1])
+
+        self.assertEquals('group_id', "".join(params['g']))
+        self.assertEquals('artifact_id', "".join(params['a']))
+        self.assertEquals('version', "".join(params['v']))
+        self.assertNotIn('c', params)
+        self.assertEquals('repo', "".join(params['r']))
+
+    def test_artifact_without_required_properties(self):
+        artifact = nexus.Artifact('group_id', 'artifact_id')
+
+        self.assertEquals('LATEST', artifact.version)
+        self.assertIsNone(artifact.repository)
+        self.assertIsNone(artifact.classifier)
