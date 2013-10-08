@@ -6,8 +6,8 @@ from sprout import config
 __all__ = ['get_artifacts', 'deploy']
 
 def get_artifacts(config_file):
-    pass
-    
+    c = config.load_config(config_file)
+
 
 def deploy(config_file):
     c = config.load_config(config_file)
