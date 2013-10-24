@@ -40,3 +40,15 @@ class Config(object):
 
     def get_setting(self, setting_name):
         return self.settings.get(setting_name, None)
+
+    def get_environment_dir(self):
+        return self.get_setting('environment_dir')
+
+    def get_local_temp_dir(self):
+        return self.get_setting('local_temp_dir')
+
+    def get_deploy_temp_dir(self):
+        return self.get_setting('deploy_temp_dir')
+
+    def get_remote_user(self):
+        return self.get_setting('remote_user')

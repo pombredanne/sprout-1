@@ -44,15 +44,14 @@ def get_artifacts(config_file):
     cfg = config.load_config(config_file)
     _get_artifacts(cfg)
 
-def deploy(config_file, environment_file):
+def deploy(config_file):
     cfg = config.load_config(config_file)
-    
-    # environment_file = describes the environment we're connecting to
-    # which artifacts go to which machine, 
-    # what script to run (install.xml and so on)
+    _get_artifacts(cfg)
 
 
-    # assuming we have already gotten the artifacts..
+    for inst in cfg.installer_list:
+        inst.do_install(cfg)
+
     # for each artifact, connect to the servers this artifact goes to
     # copy the artifact to the server
     # copy the installer script to the server
