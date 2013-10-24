@@ -6,7 +6,7 @@ class NexusTest(unittest.TestCase):
 
     def test_artifact_url(self):
         """ build artifact url. """
-        artifact = nexus.Artifact('group_id', 'artifact_id', 'version', 'classifier', 'repo')
+        artifact = nexus.Artifact('group_id', 'artifact_id', 'version', 'filename', 'classifier', 'repo')
         result = artifact.get_url('nexus')
         params = urlparse.parse_qs(result.split('?')[1])
 
@@ -18,7 +18,7 @@ class NexusTest(unittest.TestCase):
 
     def test_artifact_url_no_classifier(self):
         """ build artifact url without a classifier """
-        artifact = nexus.Artifact('group_id', 'artifact_id', 'version', classifier=None, repository='repo')
+        artifact = nexus.Artifact('group_id', 'artifact_id', 'version', 'filename', classifier=None, repository='repo')
         result = artifact.get_url('nexus')
         params = urlparse.parse_qs(result.split('?')[1])
 
@@ -29,8 +29,9 @@ class NexusTest(unittest.TestCase):
         self.assertEquals('repo', "".join(params['r']))
 
     def test_artifact_without_required_properties(self):
-        artifact = nexus.Artifact('group_id', 'artifact_id')
+        artifact = nexus.Artifact('group_id', 'artifact_id', None, None, None, None)
 
         self.assertEquals('LATEST', artifact.version)
+        self.assertEquals('artifact_id', artifact.filename)
         self.assertIsNone(artifact.repository)
         self.assertIsNone(artifact.classifier)
