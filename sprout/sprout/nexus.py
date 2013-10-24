@@ -1,23 +1,5 @@
 import urllib
 
-def artifact_url(nexus_hostname, artifact):
-    """ Get the URL to retrieve this artifact from Nexus. """
-    params = { 
-        'r' : artifact.repository,
-        'g' : artifact.group_id,
-        'a' : artifact.artifact_id,
-        'v' : artifact.version
-    }
-    if artifact.classifier:
-        params['c'] = artifact.classifier
-
-    url = "http://%(hostname)s/service/local/artifact/maven/redirect?%(qs)s" % {
-        'hostname' : nexus_hostname,
-        'qs' : urllib.urlencode(params)
-    }
-    return url;
-
-
 def artifact_dict_to_list(artifact_list, default_version=None, default_classifier='installer', default_repository='public'):
     """ Given a list of artifact dictionaries, return a list of actual Artifact objects. """
     return [Artifact(
@@ -40,6 +22,23 @@ class Artifact(object):
         self.artifact_id = artifact_id
         self.version = version
         self.classifier = classifier
+
+    def get_url(self, nexus_hostname):
+        """ Get the URL to retrieve this artifact from Nexus. """
+        params = { 
+            'r' : self.repository,
+            'g' : self.group_id,
+            'a' : self.artifact_id,
+            'v' : self.version
+        }
+        if self.classifier:
+            params['c'] = self.classifier
+
+        url = "http://%(hostname)s/service/local/artifact/maven/redirect?%(qs)s" % {
+            'hostname' : nexus_hostname,
+            'qs' : urllib.urlencode(params)
+        }
+        return url;
 
     def __str__(self):
         return "<Artifact %s %s %s %s %s>" % (

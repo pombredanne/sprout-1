@@ -7,7 +7,7 @@ class NexusTest(unittest.TestCase):
     def test_artifact_url(self):
         """ build artifact url. """
         artifact = nexus.Artifact('group_id', 'artifact_id', 'version', 'classifier', 'repo')
-        result = nexus.artifact_url('nexus', artifact)
+        result = artifact.get_url('nexus')
         params = urlparse.parse_qs(result.split('?')[1])
 
         self.assertEquals('group_id', "".join(params['g']))
@@ -19,7 +19,7 @@ class NexusTest(unittest.TestCase):
     def test_artifact_url_no_classifier(self):
         """ build artifact url without a classifier """
         artifact = nexus.Artifact('group_id', 'artifact_id', 'version', classifier=None, repository='repo')
-        result = nexus.artifact_url('nexus', artifact)
+        result = artifact.get_url('nexus')
         params = urlparse.parse_qs(result.split('?')[1])
 
         self.assertEquals('group_id', "".join(params['g']))

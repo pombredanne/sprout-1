@@ -32,11 +32,12 @@ def get_artifacts(config_file):
     cfg = config.load_config(config_file)
     _clean(cfg.settings['local_temp_dir'])
 
-    # for each artifact, build a url to nexus
     for artifact in cfg.artifacts:
+        # for each artifact, build a url to nexus
         print('artifact found %s' % artifact)
-
-    # get that artifact and put it in the local store
+        artifact_url = artifact.get_url(cfg.settings['nexus_hostname'])
+        print artifact_url
+        # get that artifact and put it in the local store
 
 
 
