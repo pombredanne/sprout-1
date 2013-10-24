@@ -1,2 +1,8 @@
 
-__all__ = ['web', 'nexus', 'config']
+__all__ = [
+'config',
+'installers',
+'nexus',
+'web'
+]
+

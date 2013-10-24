@@ -28,4 +28,24 @@ class ConfigTest(unittest.TestCase):
         self.assertEquals('xx', cfg.variables.get('$X'))
         self.assertEquals({}, cfg.settings)
 
+    def test_convert_installers(self):
+        cfg = sprout.config.load_data(
+            {
+                "artifacts" : [
+                    { "group_id" : "group", "artifact_id" : "x" },
+                    { "group_id" : "group", "artifact_id" : "y" }
+                ],
+                "installers" : [ 
+                    {
+                        "hostname" : "myhost",
+                        "installer_type" : "izpack",
+                        "installer_artifacts" : ["foo.jar", "bar.jar"],
+                        "user_input_file" : "myhost.xml"
+                    }]
+            })
+        self.assertEquals("myhost", cfg.installer_list[0].hostname)
+        self.assertEquals("myhost.xml", cfg.installer_list[0].user_input_file)
+        self.assertEquals("foo.jar", cfg.installer_list[0].installer_artifacts[0])
+        self.assertEquals("bar.jar", cfg.installer_list[0].installer_artifacts[1])
 
+ 
