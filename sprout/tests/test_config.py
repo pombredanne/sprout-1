@@ -3,42 +3,6 @@ import unittest
 
 class ConfigTest(unittest.TestCase):
 
-    def test_variable_subst(self):
-        """ one variable substitution """
-        cfg = sprout.config.load_data( 
-            {
-                "variables" :  { "$FOO" : "realvalue" },
-                "artifacts" : ["http://$FOO/bar", "http://$FOO/baz"],
-                "settings" : { }
-            })
-        self.assertEquals("http://realvalue/bar", cfg.artifacts[0])
-        self.assertEquals("http://realvalue/baz", cfg.artifacts[1])
-
-
-    def test_multi_variable_subst(self):
-        """ multi-variable substitution """
-        cfg = sprout.config.load_data(
-            {
-                "variables" : { "$FOO" : "f", "$BAR" : "b" },
-                "artifacts" : ["http://$FOO/$BAR", "https://$FOO/$BAR"],
-                "settings" : {}
-            })
-        self.assertEquals("http://f/b", cfg.artifacts[0])
-        self.assertEquals("https://f/b", cfg.artifacts[1])
-
-
-    def test_no_variables(self):
-        cfg = sprout.config.load_data(
-            {
-                "artifacts" : ["x", "y"],
-                "settings" : {}
-            })
-        self.assertEquals("x", cfg.artifacts[0])
-        self.assertEquals("y", cfg.artifacts[1])
-        self.assertEquals({}, cfg.variables)
-        self.assertEquals({}, cfg.settings)
-
-
     def test_no_artifacts(self):
         cfg = sprout.config.load_data(
             {
@@ -53,11 +17,14 @@ class ConfigTest(unittest.TestCase):
     def test_no_settings(self):
         cfg = sprout.config.load_data(
             {
-                "artifacts" : ["x", "y"],
+                "artifacts" : [
+                    { "group_id" : "group", "artifact_id" : "x" },
+                    { "group_id" : "group", "artifact_id" : "y" }
+                ],
                 "variables" : { '$X' : 'xx'}
             })
-        self.assertEquals("x", cfg.artifacts[0])
-        self.assertEquals("y", cfg.artifacts[1])
+        self.assertEquals("x", cfg.artifacts[0].artifact_id)
+        self.assertEquals("y", cfg.artifacts[1].artifact_id)
         self.assertEquals('xx', cfg.variables.get('$X'))
         self.assertEquals({}, cfg.settings)
 

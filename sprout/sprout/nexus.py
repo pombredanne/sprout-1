@@ -18,6 +18,17 @@ def artifact_url(nexus_hostname, artifact):
     return url;
 
 
+def artifact_dict_to_list(artifact_list, default_version=None, default_classifier='installer', default_repository='public'):
+    """ Given a list of artifact dictionaries, return a list of actual Artifact objects. """
+    return [Artifact(
+                a['group_id'], 
+                a['artifact_id'], 
+                a.get('version', default_version), 
+                a.get('classifier', default_classifier), 
+                a.get('repository', default_repository)
+           ) for a in artifact_list]
+
+
 class Artifact(object):
     
     def __init__(self, group_id, artifact_id, version=None, classifier=None, repository=None):
@@ -31,7 +42,7 @@ class Artifact(object):
         self.classifier = classifier
 
     def __str__(self):
-        return "<Artifact %s %s %s %s>" % (
+        return "<Artifact %s %s %s %s %s>" % (
             self.repository, 
             self.group_id,
             self.artifact_id,
