@@ -12,21 +12,18 @@ def load_config(config_file):
 
 def load_data(data):
     """ Load config data from a dictionary. """
-    return Config(data.get('artifacts'), data.get('variables'), data.get('settings'), data.get('installers'))
+    return Config(data.get('artifacts'), data.get('settings'), data.get('installers'))
 
 class Config(object):
 
-    def __init__(self, artifacts=[], variables={}, settings={}, installer_list={}):
+    def __init__(self, artifacts=[], settings={}, installer_list={}):
         if artifacts is None:
             artifacts = []
-        if variables is None:
-            variables = {}
         if settings is None:
             settings = {}
         if installer_list is None:
             installer_list = {}
 
-        self.variables = variables
         self.settings = settings
 
         # convert artifact dictionary to a list of nexus.Artifact objects
