@@ -43,8 +43,11 @@ class IzPackInstaller(Installer):
         for env_file in self.env_files:
             put(os.path.join(cfg.get_environment_dir(), env_file), deploy_temp_dir)
 
-        # run script
-        # TODO
+        # make install script runnable
+        remote_install_script = os.path.join(deploy_temp_dir, self.install_script)
+        run("chmod 755 " + remote_install_script)
+        # run it
+        sudo(remote_install_script)
         
 
     def __str__(self):

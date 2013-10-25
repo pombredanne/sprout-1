@@ -48,7 +48,6 @@ def deploy(config_file):
     cfg = config.load_config(config_file)
     _get_artifacts(cfg)
 
-
     for inst in cfg.installer_list:
         inst.do_install(cfg)
 
