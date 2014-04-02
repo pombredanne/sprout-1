@@ -5,7 +5,7 @@ import glob
 from pprint import pprint
 from sprout import * 
 
-__all__ = ['get_artifacts', 'deploy']
+__all__ = ['get_artifacts', 'deploy', 'restart_services']
 
 
 def _clean(tmpdir):
@@ -45,14 +45,23 @@ def get_artifacts(config_file):
     _get_artifacts(cfg)
 
 def deploy(config_file):
+    """ For each artifact, 
+         connect to the servers this artifact goes to
+         copy the artifact to the server
+         copy the installer script to the server
+         execute the installer on the server.
+    """
     cfg = config.load_config(config_file)
     _get_artifacts(cfg)
 
     for inst in cfg.installer_list:
         inst.do_install(cfg)
 
-    # for each artifact, connect to the servers this artifact goes to
-    # copy the artifact to the server
-    # copy the installer script to the server
-    # execute the installer on the server.
-
+def restart_services(config_file):
+    """ Restart the services for the hosts in this configuration """
+    cfg = config.load_config(config_file)
+    print cfg.service_hosts
+    for service_host in cfg.service_hosts:
+        print("host: %s" % service_host)
+        service_host.restart()
+    

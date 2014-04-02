@@ -1,7 +1,7 @@
 import json
 from collections import namedtuple 
 from pprint import pprint
-from sprout import nexus, installers
+from sprout import nexus, installers, servicehosts
 
 def load_config(config_file):
     """ Load config data from a file. """
@@ -12,18 +12,19 @@ def load_config(config_file):
 
 def load_data(data):
     """ Load config data from a dictionary. """
-    return Config(data.get('artifacts'), data.get('settings'), data.get('installers'))
+    return Config(data.get('artifacts'), data.get('settings'), data.get('installers'), data.get('service_hosts'))
 
 class Config(object):
 
-    def __init__(self, artifacts=[], settings={}, installer_list={}):
+    def __init__(self, artifacts=[], settings={}, installer_list=[], service_hosts=[]):
         if artifacts is None:
             artifacts = []
         if settings is None:
             settings = {}
         if installer_list is None:
-            installer_list = {}
-
+            installer_list = [] 
+        if service_hosts is None:
+            service_hosts = [] 
         self.settings = settings
 
         # convert artifact dictionary to a list of nexus.Artifact objects
@@ -32,9 +33,12 @@ class Config(object):
             self.get_setting('default_classifier'),
             self.get_setting('default_repository'))
 
-        # convert installers dict to list of installers
-        self.installer_list = installers.dict_to_list(installer_list)
+        # convert installers list to list of installer objects
+        self.installer_list = installers.create_objects(installer_list)
 
+        # convert service_hosts into a list of service_host objects
+        self.service_hosts = servicehosts.create_objects(self, service_hosts)
+ 
     def get_setting(self, setting_name):
         return self.settings.get(setting_name, None)
 

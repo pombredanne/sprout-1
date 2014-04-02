@@ -10,6 +10,35 @@
     },
 
     "artifacts" : [ 
-        { "group_id" : "com.company.project", "artifact_id" : "cool-service", "classifier" : "installer", "filename" : "cool-service-installer.jar" }
-    ]
+        { 
+            "group_id" : "com.company.project", 
+            "artifact_id" : "cool-service", 
+            "classifier" : "installer", 
+            "filename" : "cool-service-installer.jar" 
+        }
+    ],
+    
+    "installers" : [
+        {
+            "hostname" : "servicehost.company.com",
+            "installer_type" : "izpack",
+            "artifact_files" : [ 
+                "cool-service-installer.jar"
+            ],
+            "env_files" : [ 
+                "cool-service-install.properties",
+                "cool-service-install.sh"
+            ],
+            "install_script" : "servicehost.sh"
+        }
+    ],
+
+    "service_hosts" : [
+        {
+            "hostname" : "servicehost.company.com",
+            "services" : [
+                "cool-service"
+            ]
+        }
+    ]        
 }

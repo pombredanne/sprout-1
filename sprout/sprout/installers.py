@@ -1,8 +1,12 @@
 import os
 from fabric.api import *
 
-def dict_to_list(installer_list):
-    """ For now the only type of installer we support is 'izpack' """
+def create_objects(installer_list):
+    """ Turn a list of installer info into objects that can do
+        actual installing.
+
+        For now the only type of installer we support is 'izpack' 
+    """
     return [IzPackInstaller(
                 i['hostname'], 
                 i['install_script'],
